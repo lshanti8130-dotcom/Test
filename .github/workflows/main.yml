@@ -1,0 +1,73 @@
+name: SSHX 
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */6 * * *"
+
+jobs:
+  sshx:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+
+    steps:
+      - name: Init logging
+        run: |
+          LOG=runtime.log
+          echo "LOG_FILE=$LOG" >> $GITHUB_ENV
+          echo "=============================" > $LOG
+          echo "VM STARTED: $(date)" >> $LOG
+          echo "=============================" >> $LOG
+
+      - name: Set hostname
+        run: |
+          sudo hostnamectl set-hostname kaoru
+          echo "Hostname set to kaoru" >> $LOG_FILE
+
+      - name: Update system
+        run: |
+          sudo apt update -y >> $LOG_FILE 2>&1
+          sudo apt install -y curl neofetch >> $LOG_FILE 2>&1
+
+      - name: System info
+        run: |
+          neofetch >> $LOG_FILE
+
+      - name: Start SSHX
+        run: |
+          echo "Installing SSHX..." >> $LOG_FILE
+          curl -s https://sshx.io/get | bash >> $LOG_FILE 2>&1
+
+          echo "Starting SSHX..." >> $LOG_FILE
+          sshx --shell bash | tee sshx.log &
+          sleep 15
+
+          SSHX_URL=$(grep -o 'https://sshx.io/[^ ]*' sshx.log | head -n 1)
+          echo "SSHX URL: $SSHX_URL" >> $LOG_FILE
+          echo "SSHX_URL=$SSHX_URL" >> $GITHUB_ENV
+
+          curl -s -X POST "https://api.telegram.org/bot8123940028:AAHI-0CvbsZUicg7N_Wyj8Io_tyP_G33wo4/sendMessage" \
+            -d chat_id=-5015922246 \
+            -d text="Fresh VM started
+             Hostname: kaoru
+             SSHX URL:
+            $SSHX_URL"
+
+      - name: Hourly logs + heartbeat
+        run: |
+          for HOUR in 1 2 3 4 5; do
+            sleep 3600
+            echo "Hour $HOUR reached at $(date)" >> $LOG_FILE
+
+            curl -s -X POST "https://api.telegram.org/bot8123940028:AAHI-0CvbsZUicg7N_Wyj8Io_tyP_G33wo4/sendMessage" \
+              -d chat_id=-5015922246 \
+              --data-urlencode text="$(tail -n 40 $LOG_FILE)"
+          done
+
+      - name: Final log dump
+        run: |
+          echo "VM shutting down at $(date)" >> $LOG_FILE
+
+          curl -s -X POST "https://api.telegram.org/bot8123940028:AAHI-0CvbsZUicg7N_Wyj8Io_tyP_G33wo4/sendMessage" \
+            -d chat_id=-5015922246 \
+            --data-urlencode text="$(cat $LOG_FILE)"
