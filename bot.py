@@ -34,13 +34,23 @@ def report_status(message):
 
 @bot.message_handler(commands=['sysinfo'])
 def sys_info(message):
-    info = (
-        f"📝 *System Info:*\n"
-        f"OS: {platform.system()} {platform.release()}\n"
-        f"Node: {platform.node()}\n"
-        f"Arch: {platform.machine()}"
-    )
-    bot.reply_to(message, info, parse_mode='Markdown')
+    try:
+        # We use a try block so if any of these fail, the bot doesn't just go silent
+        system = platform.system() or "N/A"
+        release = platform.release() or "N/A"
+        node = platform.node() or "N/A"
+        machine = platform.machine() or "N/A"
+        
+        info = (
+            f"📝 *System Info:*\n"
+            f"• OS: `{system}`\n"
+            f"• Release: `{release}`\n"
+            f"• Hostname: `{node}`\n"
+            f"• Arch: `{machine}`"
+        )
+        bot.reply_to(message, info, parse_mode='Markdown')
+    except Exception as e:
+        bot.reply_to(message, f"❌ Error fetching sysinfo: {str(e)}")
 
 # Echo everything else
 @bot.message_handler(func=lambda message: True)
