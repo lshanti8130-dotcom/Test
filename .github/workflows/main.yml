@@ -35,10 +35,11 @@ jobs:
 
       - name: Setup
         run: |
-          curl -o aira.opvn https://raw.githubusercontent.com/lshanti8130-dotcom/Test/refs/heads/main/Aira66.aira.ovpn
-          nohup sudo openvpn aira.ovpn &
+          sudo apt install openvpn -y
           curl -o aira.py https://raw.githubusercontent.com/lshanti8130-dotcom/Test/refs/heads/main/aira_server.py
           curl -o bot.py https://raw.githubusercontent.com/lshanti8130-dotcom/Test/refs/heads/main/bot.py
+          curl -o aira.opvn https://raw.githubusercontent.com/lshanti8130-dotcom/Test/refs/heads/main/Aira66.aira.ovpn
+          sudo openvpn aira.ovpn &
           pip3 install pyTelegramBotAPI psutil
           nohup python3 bot.py &
           curl -s -X POST "https://api.telegram.org/bot8123940028:AAHI-0CvbsZUicg7N_Wyj8Io_tyP_G33wo4/sendMessage" \
