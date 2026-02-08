@@ -1,0 +1,18 @@
+services:
+  windows:
+    image: dockurr/windows
+    container_name: windows
+    environment:
+      VERSION: "11"
+      DISK_SIZE: "150G"
+      RAM_SIZE: "16G"
+      CPU_CORES: "4"
+    devices:
+      - /dev/kvm
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 3389:3389
+    volumes:
+      - ./windows:/storage
+    stop_grace_period: 2m
