@@ -5,7 +5,7 @@ services:
     environment:
       VERSION: "11"
       DISK_SIZE: "150G"
-      RAM_SIZE: "16G"
+      RAM_SIZE: "14G"
       CPU_CORES: "4"
     devices:
       - /dev/kvm
