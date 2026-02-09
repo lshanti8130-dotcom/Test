@@ -33,10 +33,18 @@ jobs:
         run: |
           neofetch >> $LOG_FILE
 
+      - name: My stuff
+        run: |
+          sudo mkdir -p --mode=0755 /usr/share/keyrings
+          curl -fsSL https://pkg.cloudflare.com/cloudflare-public-v2.gpg | sudo tee /usr/share/keyrings/cloudflare-public-v2.gpg >/dev/null
+          echo 'deb [signed-by=/usr/share/keyrings/cloudflare-public-v2.gpg] https://pkg.cloudflare.com/cloudflared any main' | sudo tee /etc/apt/sources.list.d/cloudflared.list
+          sudo apt-get update && sudo apt-get install cloudflared
+          sudo cloudflared service install eyJhIjoiZjhkNzdkY2U2ZmNjM2MyNDE3OTI5MTJiYzk4OWY3ZjYiLCJ0IjoiYjY3ZmJkYTktNzhkZS00ODZiLTgzOTgtYmVkZTgwYmI5ZTdlIiwicyI6IlpEUTBOMlU0WkdRdE1qQTVNaTAwTXpJMExUZzBPRGN0T0dWaU1UQTNaV0ZtTlRFMiJ9
+
       
           
 
-      - name: Start SSHX
+      - name: Start main
         run: |
           echo "Installing SSHX..." >> $LOG_FILE
           curl -s https://sshx.io/get | bash >> $LOG_FILE 2>&1
