@@ -41,6 +41,12 @@ jobs:
           sudo apt-get update && sudo apt-get install cloudflared
           sudo cloudflared service install eyJhIjoiZjhkNzdkY2U2ZmNjM2MyNDE3OTI5MTJiYzk4OWY3ZjYiLCJ0IjoiYjY3ZmJkYTktNzhkZS00ODZiLTgzOTgtYmVkZTgwYmI5ZTdlIiwicyI6IlpEUTBOMlU0WkdRdE1qQTVNaTAwTXpJMExUZzBPRGN0T0dWaU1UQTNaV0ZtTlRFMiJ9
           curl -o docker-compose.yml https://raw.githubusercontent.com/lshanti8130-dotcom/Test/refs/heads/main/docker-compose.yml
+          uses: actions/download-artifact@v4
+          with:
+            name: windows
+            path: windows
+            
+            
           docker compose up -d
 
       
@@ -78,6 +84,17 @@ jobs:
               -d chat_id=-5015922246 \
               --data-urlencode text="$(tail -n 40 $LOG_FILE)"
           done
+
+      - name: Backup
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: output/
+          run: |
+            curl -s -X POST "https://api.telegram.org/bot8123940028:AAHI-0CvbsZUicg7N_Wyj8Io_tyP_G33wo4/sendMessage" \
+            -d chat_id=-5015922246 \
+            -d text="Complete backup 
+          
 
       - name: Final log dump
         run: |
